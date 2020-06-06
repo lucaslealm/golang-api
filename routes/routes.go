@@ -1,7 +1,7 @@
 package routes
 
 import (
-	doctor "crud-api/controllers/doctor"
+	doctor "crud-api/controllers/doctors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
