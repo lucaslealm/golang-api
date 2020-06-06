@@ -17,8 +17,8 @@ func StartService() {
 		api.PUT("/doctors/:id", doctor.UpdateDoctor)
 		api.DELETE("/doctors/:id", doctor.DeleteDoctor)
 	}
-	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatus(http.StatusNotFound)
+	router.NoRoute(func(ctx *gin.Context) {
+		ctx.AbortWithStatus(http.StatusNotFound)
 	})
 	router.Run(":8000")
 }

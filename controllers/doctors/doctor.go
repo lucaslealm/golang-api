@@ -63,7 +63,7 @@ func CreateDoctor(ctx *gin.Context) {
 
 func UpdateDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
-	var id bson.ObjectId = bson.ObjectIdHex(ctx.Param("id")) // Get Param
+	var id bson.ObjectId = bson.ObjectIdHex(ctx.Param("id"))
 	existingDoctor, err := doctor.DoctorInfo(id, DoctorCollection)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errInvalidID})
