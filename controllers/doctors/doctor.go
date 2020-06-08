@@ -3,7 +3,6 @@ package doctor
 import (
 	"crud-api/conn"
 	doctor "crud-api/models/doctor"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -16,7 +15,7 @@ const DoctorCollection = "doctor"
 var (
 	errNotExist     = "There are no doctors to display"
 	errInvalidID    = "Invalid doctor ID"
-	errInvalidBody  = "Invalid request body"
+	errInvalidBody  = "Invalid request body" //-----------------------------------------------------------------------------ADD MENSAGEM MAIS EXPLICATIVA
 	errCreateFailed = "There was an error creating a new doctor"
 	errUpdateFailed = "There was an error updating the doctor"
 	errDeleteFailed = "There was an error deleting the doctor"
@@ -46,15 +45,17 @@ func GetDoctor(ctx *gin.Context) {
 func CreateDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	doctor := doctor.Doctor{}
+	// isValid, errorMessage := doctor.Validate()
+	// if isValid == false {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errorMessage})
+	// 	return
+	// }
+
 	err := ctx.Bind(&doctor)
-	fmt.Println("doctor", doctor)
-	fmt.Println("&doctor", &doctor)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errInvalidBody})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
-	fmt.Println("doctor logo antes do insert", doctor)
-	fmt.Println("&doctor logo antes do insert", &doctor)
 	err = db.C(DoctorCollection).Insert(doctor)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errCreateFailed})
