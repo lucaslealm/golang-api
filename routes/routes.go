@@ -9,13 +9,13 @@ import (
 
 func StartService() {
 	router := gin.Default()
-	api := router.Group("/api")
+	version := router.Group("/v1")
 	{
-		api.GET("/doctors", doctor.GetDoctors)
-		api.GET("/doctors/:id", doctor.GetDoctor)
-		api.POST("/doctors", doctor.CreateDoctor)
-		api.PUT("/doctors/:id", doctor.UpdateDoctor)
-		api.DELETE("/doctors/:id", doctor.DeleteDoctor)
+		version.GET("/doctors", doctor.GetDoctors)
+		version.GET("/doctors/:id", doctor.GetDoctor)
+		version.POST("/doctors", doctor.CreateDoctor)
+		version.PUT("/doctors/:id", doctor.UpdateDoctor)
+		version.DELETE("/doctors/:id", doctor.DeleteDoctor)
 	}
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusNotFound)

@@ -20,7 +20,6 @@ func init() {
 	db = session.DB(dbName)
 }
 
-// GetMongoDB function to return DB connection
 func GetMongoDB() *mgo.Database {
 	return db
 }

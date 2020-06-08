@@ -2,7 +2,8 @@ package doctor
 
 import (
 	"crud-api/conn"
-	doctor "crud-api/models"
+	doctor "crud-api/models/doctor"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -46,13 +47,14 @@ func CreateDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	doctor := doctor.Doctor{}
 	err := ctx.Bind(&doctor)
+	fmt.Println("doctor", doctor)
+	fmt.Println("&doctor", &doctor)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errInvalidBody})
 		return
 	}
-	doctor.ID = bson.NewObjectId()
-	doctor.CreatedAt = time.Now()
-	doctor.UpdatedAt = time.Now()
+	fmt.Println("doctor logo antes do insert", doctor)
+	fmt.Println("&doctor logo antes do insert", &doctor)
 	err = db.C(DoctorCollection).Insert(doctor)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errCreateFailed})
