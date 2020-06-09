@@ -19,5 +19,5 @@ func TestCreateDoctors(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/doctors", bytes.NewBuffer(doctorJson))
 	router.ServeHTTP(w, req)
-	assert.Equal(t, 201, w.Code, "Created(HTTP 201) is expected")
+	assert.Equal(t, 201, w.Code)
 }

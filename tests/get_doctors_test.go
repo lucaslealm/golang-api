@@ -11,9 +11,8 @@ import (
 
 func TestGetDoctors(t *testing.T) {
 	router := routes.SetupRouter()
-
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/doctors", nil)
 	router.ServeHTTP(w, req)
-	assert.Equal(t, 200, w.Code, "OK(HTTP 200) is expected")
+	assert.Equal(t, 200, w.Code)
 }

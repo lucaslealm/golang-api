@@ -2,9 +2,9 @@ package utils
 
 const NOT_EXISTS = "There are no doctors to display"
 
-const INVALID_ID = "Invalid doctor ID"
+const INVALID_ID = "The doctor ID informed is invalid"
 
-const INVALID_BODY = "Invalid request body"
+const INVALID_BODY = "The body of the request is invalid"
 
 const CREATE_FAILED = "There was an error creating a new doctor"
 
