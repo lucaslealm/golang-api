@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func StartService() {
+func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	version := router.Group("/v1")
 	{
@@ -20,5 +20,5 @@ func StartService() {
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusNotFound)
 	})
-	router.Run(":8000")
+	return router
 }

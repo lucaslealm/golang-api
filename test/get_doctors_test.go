@@ -15,5 +15,5 @@ func TestGetDoctors(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/doctors", nil)
 	router.ServeHTTP(w, req)
-	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, 200, w.Code, "OK(HTTP 200) is expected")
 }

@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	routes.StartService()
+	router := routes.SetupRouter()
+	router.Run(":8080")
 }
