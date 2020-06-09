@@ -3,30 +3,19 @@ package doctor
 import (
 	"crud-api/conn"
 	doctor "crud-api/models/doctor"
+	utils "crud-api/utils"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
 
-const DoctorCollection = "doctor"
-
-var (
-	errNotExist     = "There are no doctors to display"
-	errInvalidID    = "Invalid doctor ID"
-	errInvalidBody  = "Invalid request body" //-----------------------------------------------------------------------------ADD MENSAGEM MAIS EXPLICATIVA
-	errCreateFailed = "There was an error creating a new doctor"
-	errUpdateFailed = "There was an error updating the doctor"
-	errDeleteFailed = "There was an error deleting the doctor"
-)
-
 func GetDoctors(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	doctors := doctor.Doctors{}
-	err := db.C(DoctorCollection).Find(bson.M{}).All(&doctors)
+	err := db.C(utils.DOCTOR_COLLECTION).Find(bson.M{}).All(&doctors)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "failed", "message": errNotExist})
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "failed", "message": utils.NOT_EXISTS})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "doctors": &doctors})
@@ -34,9 +23,9 @@ func GetDoctors(ctx *gin.Context) {
 
 func GetDoctor(ctx *gin.Context) {
 	var id bson.ObjectId = bson.ObjectIdHex(ctx.Param("id"))
-	doctor, err := doctor.DoctorInfo(id, DoctorCollection)
+	doctor, err := doctor.DoctorInfo(id, utils.DOCTOR_COLLECTION)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "failed", "message": errInvalidID})
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "failed", "message": utils.INVALID_ID})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "doctor": &doctor})
@@ -45,20 +34,14 @@ func GetDoctor(ctx *gin.Context) {
 func CreateDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	doctor := doctor.Doctor{}
-	// isValid, errorMessage := doctor.Validate()
-	// if isValid == false {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errorMessage})
-	// 	return
-	// }
-
 	err := ctx.Bind(&doctor)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
-	err = db.C(DoctorCollection).Insert(doctor)
+	err = db.C(utils.DOCTOR_COLLECTION).Insert(&doctor)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errCreateFailed})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": utils.CREATE_FAILED})
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "doctor": &doctor})
@@ -67,21 +50,20 @@ func CreateDoctor(ctx *gin.Context) {
 func UpdateDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	var id bson.ObjectId = bson.ObjectIdHex(ctx.Param("id"))
-	existingDoctor, err := doctor.DoctorInfo(id, DoctorCollection)
+	existingDoctor, err := doctor.DoctorInfo(id, utils.DOCTOR_COLLECTION)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errInvalidID})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": utils.INVALID_ID})
 		return
 	}
 	err = ctx.Bind(&existingDoctor)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errInvalidBody})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": utils.INVALID_BODY})
 		return
 	}
 	existingDoctor.ID = id
-	existingDoctor.UpdatedAt = time.Now()
-	err = db.C(DoctorCollection).Update(bson.M{"_id": &id}, existingDoctor)
+	err = db.C(utils.DOCTOR_COLLECTION).Update(bson.M{"_id": &id}, existingDoctor)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errUpdateFailed})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": utils.UPDATE_FAILED})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "doctor": &existingDoctor})
@@ -90,10 +72,10 @@ func UpdateDoctor(ctx *gin.Context) {
 func DeleteDoctor(ctx *gin.Context) {
 	db := conn.GetMongoDB()
 	var id bson.ObjectId = bson.ObjectIdHex(ctx.Param("id"))
-	err := db.C(DoctorCollection).Remove(bson.M{"_id": &id})
+	err := db.C(utils.DOCTOR_COLLECTION).Remove(bson.M{"_id": &id})
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": errDeleteFailed})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": utils.DELETE_FAILED})
 		return
 	}
-	ctx.JSON(http.StatusNoContent, gin.H{"status": "success", "message": "Doctor deleted successfully"})
+	ctx.JSON(http.StatusNoContent, gin.H{"status": "success"})
 }

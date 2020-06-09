@@ -2,44 +2,32 @@ package model
 
 import (
 	"crud-api/conn"
-	"time"
-
+	utils "crud-api/utils"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type Doctor struct {
 	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Name        string        `bson:"name,omitempty" binding:"required"`
-	Specialty   string        `bson:"specialty,omitempty" binding:"required"`
-	Age         int           `bson:"age,omitempty" binding:"required"`
-	IsAvailable bool          `bson:"is_available,omitempty" binding:"required"`
-	CreatedAt   time.Time     `bson:"created_at,omitempty"`
-	UpdatedAt   time.Time     `bson:"updated_at,omitempty"`
+	Name        string        `bson:"name,omitempty"`
+	Specialty   string        `bson:"specialty,omitempty"`
+	Age         int           `bson:"age,omitempty"`
+	IsAvailable bool          `bson:"is_available,omitempty"`
 }
-
-// var stringType = reflect.TypeOf("")
-// var intType = reflect.TypeOf(1)
-// var boolType = reflect.TypeOf(true)
 
 type Doctors []Doctor
 
-func DoctorInfo(id bson.ObjectId, doctorCollection string) (Doctor, error) {
+func DoctorInfo(id bson.ObjectId, utils.DOCTOR_COLLECTION string) (Doctor, error) {
 	db := conn.GetMongoDB()
 	doctor := Doctor{}
-	err := db.C(doctorCollection).Find(bson.M{"_id": &id}).One(&doctor)
+	err := db.C(utils.DOCTOR_COLLECTION).Find(bson.M{"_id": &id}).One(&doctor)
 	return doctor, err
 }
 
-// func (doctor Doctor) Validate() (isValid bool, errorMessage string) {
-
-// 	if reflect.TypeOf(doctor.Name) != stringType || reflect.TypeOf(doctor.Specialty) != stringType {
-// 		errorMessage = "Doctor name and specialty must be entered as string"
-// 	} else if reflect.TypeOf(doctor.Age) != intType {
-// 		errorMessage = "Doctor age must be entered as integer"
-// 	} else if reflect.TypeOf(doctor.IsAvailable) != boolType {
-// 		errorMessage = "Doctor is available field must be entered as boolean"
-// 	} else {
-// 		isValid = true
-// 	}
-// 	return isValid, errorMessage
-// }
+func NewDoctor(name string, Specialty string, Age int, IsAvailable bool) Doctor {
+	doctor := Doctor{}
+	doctor.Name = name
+	doctor.Specialty = Specialty
+	doctor.Age = Age
+	doctor.IsAvailable = IsAvailable
+	return doctor
+}
