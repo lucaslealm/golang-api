@@ -25,3 +25,19 @@ make test
 ```
 
 The commands above will also download and install the necessary dependencies.
+
+## Making requests
+
+You can use [Postman](https://www.postman.com/downloads/) to make requests to the following endpoints on port **8080**:
+
+```
+GET       /v1/doctors - Retrieves all doctor records from database
+
+GET       /v1/doctors/:id - Retrieve a specific doctor by its ID
+  
+POST      /v1/doctors - Creates a new doctor
+
+PUT       /v1/doctors/:id - Updates an existing doctor by its ID
+
+DELETE    /v1/doctors/:id - Deletes the selected doctor by its ID
+```
